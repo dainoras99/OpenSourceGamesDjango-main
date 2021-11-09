@@ -1,0 +1,87 @@
+{% extends 'accounts/main.html' %}
+{% block content %}
+    <div id="wrapper">
+
+        <header>
+            <h2>Open-Source-Games</h2>
+        </header>
+
+        {% include 'accounts/navbar.html' %}
+        <div class="row">
+
+            <div class="leftcolumn">
+                <div id="aboutmeheader">
+                    <h1>Aktualijos</h1>
+                </div>
+                {% if request.user.is_staff %}
+                <div class="ikelimas">
+                    <button type="button" value="Įkelti žaidimą">
+                        <a style="color: black; text-decoration: none;" href="{% url 'uploadNews' %}">Ikelti Naujiena!</a>
+                    </button>
+                </div>
+                {% endif %}
+                <div class="card">
+                    
+                    {% for i in news%}
+                    <a href={% url 'newsPage' i.id %}>
+                    <div class="minicontent">
+
+                        <h3 style="text-align: center;">{{i.headline}}</h3>
+                        <hr>
+                        <img src="{{i.image.url}}" width="583" height="280">
+                        <hr>
+                        <h4 style="margin-left: 10px">Autorius: {{i.author}}</h4>
+                    </div>
+                    </a>
+                    {% endfor%}
+
+                    <div class="clear"></div>
+                </div>
+            </div>
+
+            <div class="rightcolumn">
+
+                <div class="card">
+                    <div id="aboutmeheader">
+                        <h2>Populiaru</h2>
+                    </div>
+                    <div style="align-items: center; justify-content: center; display: flex;" class="sidecontent">
+                        <a style="text-decoration: none;" href={% url 'newsPage' 5 %}>
+                            <h3 style="text-align: center; padding: 0px 15px;">Lietuvos apeliacinis teismas ketvirtadienį atmetė iki gyvos galvos įkalinto Henriko Daktaro prašymą skirti jam terminuotą bausmę.</h3>
+                        </a>
+                    </div>
+                    <div style="align-items: center; justify-content: center; display: flex;" class="sidecontent">
+                        <a style="text-decoration: none;" href={% url 'newsPage' 6 %}>
+                            <h3 style="text-align: center; padding: 0px 15px">Darbas, generuojantis milijonus, apie kurį mažai kas žino. Interviu su „skin‘ų“ kūrėju Moonfighter</h3>
+                        </a>
+                    </div>
+                    <div class="clear"></div>
+
+
+                </div>
+                <div class="card">
+                    <div id="aboutmeheader">
+                        <h2>Naujausia</h2>
+                    </div>
+                    <div style="align-items: center; justify-content: center; display: flex;" class="sidecontent">
+                        <a style="text-decoration: none;" href={% url 'newsPage' 7 %}>
+                            <h3 style="text-align: center; padding: 0px 15px"">Geriau nei „Netflix“ dramos – žaidimo „Life is Strange: True Colors“ apžvalga.</h3>
+                        </a>
+                    </div>
+                    <div style="align-items: center; justify-content: center; display: flex;" class="sidecontent">
+                        <a style="text-decoration: none;" href={% url 'newsPage' 8 %}>
+                            <h3 style="text-align: center; padding: 0px 15px">Kaip „Steam“ pavyko tapti žinomiausia žaidimų platforma?</h3>
+                         </a>
+                    </div>
+                    <div class="clear"></div>
+
+                </div>
+            </div>
+        </div>
+        <div id="footer">
+            <footer>
+                <address>2021 &copy;Dominykas Pleteras</address>
+            </footer>
+        </div>
+    </div>
+{% endblock %}

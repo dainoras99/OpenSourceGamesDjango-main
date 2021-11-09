@@ -1,0 +1,72 @@
+{% extends 'accounts/main.html' %}
+{% block content %}
+<div id="wrapper">
+    <header>
+        <h2>Open Source-Games</h2>
+    </header>
+    {% include 'accounts/navbar.html' %}
+
+    <div class="leftcolumn">
+        <div class="card">
+
+            <h1>{{news.headline}}</h1>
+                <div class="photo-wrapper">
+                    <img class="photo" src="{{news.image.url}}">
+                </div>
+            <h2>Autorius:{{news.author}}</h2>
+            <p>{{news.text}}</p>
+        </div>
+    </div>
+    <div class="rightcolumn">
+        <div class="card">
+
+
+            <h1>Komentarai</h1>
+            {% if not news.comments.all %}
+                {% if request.user.is_authenticated %}
+                    Jokiu komentaru nera <a href="{% url 'addComment' news.id %}">Prideti nauja</a>
+                {% endif %}
+            {% else %}
+            {% if request.user.is_authenticated %}
+            <div class="ikelimas">
+                    <button type=" button" value="Prideti Komentara">
+                <a style="color: black; text-decoration: none;" href="{% url 'addComment' news.id %}">Pridėti
+                    komentarą</a>
+                </button>
+            </div>
+
+            {% endif %}
+
+
+        </div>
+        <br>
+        {% for comment in news.comments.all%}
+        <div class="card">
+            <strong>
+                {{comment.userid}}
+                <br>
+                {{comment.date_added}}
+            </strong>
+            <div style="background-color: rgb(160, 161, 161);">
+                {{comment.body}}
+            </div>
+        </div>
+        <br>
+
+        {% endfor %}
+        <br>
+
+
+    </div>
+    {% endif%}
+
+
+
+
+</div>
+</div>
+<footer>
+    <address>2021 &copy;Dominykas Pleteras</address>
+</footer>
+</div>
+{%endblock%}

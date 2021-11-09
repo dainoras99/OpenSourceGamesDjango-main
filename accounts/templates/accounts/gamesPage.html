@@ -1,0 +1,84 @@
+
+{% extends 'accounts/main.html' %}
+{% block content %}
+{% load static %}
+    <div id="wrapper">
+        <header>
+            <h2>Open Source-Games</h2>
+        </header>
+        {% include 'accounts/navbar.html' %}
+        <div class="row">
+            <div class="leftcolumn2" id="ate-ate">
+                <div class="card">
+                    <div class="fill">
+                        <img src="{%static '/Images/reklama2.png' %}" alt="Error loading">
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="middlecolumn" id="per-viduriuka">
+                <div class="card">
+                    <h1>{{userGame.gameName}}</h1>
+                    <div id="fotke-vidurkyje">
+                        <img class="photo" src="{{userGame.image.url}}">
+                    </div>
+                    <hr>
+                    <h2>Autorius: {{userGame.gameOwnerUsername}}</h2>
+                    <hr>
+                    <h2>Kodas:</h2>
+                    <p>{{userGame.gameCode}}</p>
+                    <hr>
+                    <h3>Description:</h3>
+                    <code style="font-size: 150%;">{{userGame.gameDescription}}</code>
+
+                </div>
+            </div>
+            <div >
+                <div class="card">
+        
+        
+                    <h1>Komentarai</h1>
+                    {% if not userGame.games.all %}
+                        {% if request.user.is_authenticated %}
+                            Jokiu komentaru nera <a href="#temp">Prideti nauja</a>
+                        {% endif %}
+                    {% else %}
+                    {% if request.user.is_authenticated %}
+                    <div class="ikelimas">
+                            <button type=" button" value="Prideti Komentara">
+                        <a style="color: black; text-decoration: none;" href="#temp2">Pridėti
+                            komentarą</a>
+                        </button>
+                    </div>
+        
+                    {% endif %}
+        
+        
+                </div>
+                <br>
+                {% for comment in userGame.games.all%}
+                <div class="card">
+                    <strong>
+                        {{comment.user_id}}
+                        <br>
+                        {{comment.date_added}}
+                    </strong>
+                    <div style="background-color: rgb(160, 161, 161);">
+                        {{comment.comment_body}}
+                    </div>
+                </div>
+                <br>
+        
+                {% endfor %}
+                <br>
+        
+        
+            </div>
+            {% endif%}
+
+            <footer>
+                <address>2021 &copy;Dominykas Pleteras</address>
+            </footer>
+        </div>
+{%endblock%}

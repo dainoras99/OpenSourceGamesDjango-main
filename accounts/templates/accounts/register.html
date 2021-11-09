@@ -1,0 +1,93 @@
+{% extends 'accounts/main.html' %}
+{% block content %}
+    <div id="wrapper">
+
+        <header>
+            <h2>Open-Source-Games</h2>
+        </header>
+
+        {% include 'accounts/navbar.html' %}
+        <div class="row">
+            <div class="leftcolumn2">
+                <div class="card">
+                    <div class="fill">
+                        <img src="Images/reklama2.png" alt="Error loading">
+                    </div>
+
+
+                </div>
+            </div>
+            <!--sutvarkyti kad tekstas butu arciau lauku , tipo po desine puse ju-->
+            <div class="middlecolumn">
+                <div class="card">
+
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <div class="row">
+                            <h2 style="text-align: center;">Registracija</h2>
+                            <div class="col-25">
+                                <label for="ilgis">Slapyvardis</label>
+                            </div>
+                            <div class="col-75">
+                                {{form.username}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            
+                            <div class="col-25">
+                                <label for="ilgis">El.Paštas</label>
+                            </div>
+                            <div class="col-75">
+                                {{form.email}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            
+                            <div class="col-25">
+                                <label for="ilgis">Slaptažodis</label>
+                            </div>
+                            <div class="col-75">
+                                {{form.password1}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            
+                            <div class="col-25">
+                                <label for="ilgis">Pakartokite Slaptažodį</label>
+                            </div>
+                            <div class="col-75">
+                                {{form.password2}}
+                            </div>
+                        </div>
+                        {{form.errors}}
+                        <br>
+                        <div class="row">
+                            <input type="submit" value="Pateikti">
+                        </div>
+                    </form>
+
+
+
+
+
+                </div>
+            </div>
+            <div class="rightcolumn2">
+
+                <div class="card">
+                    <div class="fill">
+                        <img src="Images/reklama3.png" alt="Error loading">
+                    </div>
+
+                </div>
+            </div>
+
+            
+        </div>
+        <div id="footer">
+            <footer>
+                <address>2021 &copy;Dominykas Pleteras</address>
+            </footer>
+        </div>
+    </div>
+{% endblock %}
