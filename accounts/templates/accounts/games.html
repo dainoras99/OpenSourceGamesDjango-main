@@ -1,64 +1,39 @@
 {% extends 'accounts/main.html' %}
 {% block content %}
-<div id="wrapper">
-
-    <header>
-        <h2>Open-Source-Games</h2>
-    </header>
-
-    {% include 'accounts/navbar.html' %}
-    <div class="row">
-
-        <!--sutvarkyti kad tekstas butu arciau lauku , tipo po desine puse ju-->
-        <div class="games_wrapper">
-            <div id="games-header">
-
-                <div class="rusiavimas">
-                    <select id="filter" name="country">
-                        <option value="" selected disabled hidden>Rūšiavimas</option>
-                        <option value="popular">Populiariausi</option>
-                        <option value="new">Naujausi</option>
-                        <option value="rating">Geriausiai įvertinti</option>
-                    </select>
-                </div>
-                <div class="pavadinimas">
-                    <h1>Visi žaidimai</h1>
-                </div>
-                {% if request.user.is_authenticated %}
-                <div class="ikelimas" id="game-header-ikelimas">
-                    <button type="button" value="Įkelti žaidimą">
-                        <a style="color: black; text-decoration: none;" href="{% url 'uploadGame' %}">Įkelti
-                            žaidimą!</a>
-                    </button>
-                </div>
-                {% endif %}
-            </div>
-            {% for i in userGame%}
-            <a href={% url 'gamesPage' i.id %}>
-                <div class="games-content-item">
-
-
-
-
-                    <img class="photo" src="{{i.image.url}}">
-                    <div class="data">
-                        <div style="color: yellow;" class="name">{{i.gameName}}</div>
-                        <div class="info">
-                            <p>{{i.gameDescription}}</p>
-                        </div>
-                    </div>
-                </div>
-            </a>
-            {% endfor%}
-
-            <div class="clear"></div>
+{% include 'accounts/navbar.html' %}
+<section class="py-2 text-center container">
+    <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1 class="fw-light">Žaidimai</h1>
+            <p class="text-muted">Svetainės vartotojų žaidimai</p>
         </div>
-
+        
     </div>
-    <div id="footer">
-        <footer>
-            <address>2021 &copy;Dominykas Pleteras</address>
-        </footer>
+    
+</section>
+
+<div class="album py-5 bg-light">
+    {% if request.user.is_staff %}
+    <button type="button" class="btn btn-secondary" value="Įkelti žaidima">
+        <a style="color: black; text-decoration: none;" href="{% url 'uploadGame' %}">Ikelti žaidimą!</a>
+    </button>
+    {% endif %}
+    <div class="container">
+        {% for i in userGame%}
+        <a href={% url 'gamesPage' i.id %}>
+            <div class="card mb-3">
+                <img class="card-img-top" src="{{i.image.url}}" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{i.gameName}}</h5>
+                    <p class="card-text">{{i.gameDescription}}</p>
+                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                </div>
+            </div>
+        </a>
+        {% endfor%}
+
     </div>
 </div>
+
+
 {% endblock %}
