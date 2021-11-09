@@ -1,18 +1,39 @@
-
-<ul class="navigation">
-    <li><a href="{% url 'home' %}">Pradžia</a></li>
-    <li><a href="#about">Forumas</a></li>
-    <li><a href="{% url 'news' %}">Naujienos</a></li>
-    <li><a href="{% url 'games' %}">Žaidimai</a></li>
-    <li><a href="#Kontaktai">Pagalba</a></li>
-    <li><a href="#Anketa">Kontaktai</a></li>
-    <li><a href="{% url 'weather' %}">Orai</a></li>
-    {% if request.user.is_authenticated %}
-        <li style="float: right"><a href="{% url 'logout' %}">Atsijungti</a></li>
-        <li style="float: right"><a style="color:gold;">Sveiki, {{request.user.username}}</a></li>
-    {% else %}
-    <li style="float: right;"><a href="{% url 'login' %}">Prisijungti</a></li>
-    <li style="float: right;"><a href="{% url 'register' %}">Registracija</a></li>
-    {% endif %}
-    
-</ul>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">O.S.G</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'home' %}">Pradzia</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'news' %}">Naujienos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'games' %}">Zaidimai</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'weather' %}">Orai</a>
+          </li>
+        </ul>
+        <ul class="nav navbar-nav ml-auto">
+            {% if request.user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">Atsijungti</a>
+            </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">Prisijungti</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'register' %}">Registruotis</a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>

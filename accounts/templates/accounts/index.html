@@ -1,107 +1,37 @@
 {% extends 'accounts/main.html' %}
 {% block content %}
-    <div id="wrapper">
+{% include 'accounts/navbar.html' %}
+<section id="hero" class="d-flex align-items-center justify-content-center">
+    <div class="container" data-aos="fade-up">
 
-        <header>
-            <h2>Open-Source-Games</h2>
-        </header>
-    
-        {% include 'accounts/navbar.html' %}
-    <div class="row">
-        <div class="leftcolumn2">
-            <div class="card">
-                <div id="aboutmeheader">
-                    <h1>Naujienos</h1>
-                </div>
-                {% for i in news%}
-                <a href={% url 'newsPage' i.id %}>
-                <div class="minicontentMain">
-                        
-                    <h3 style="text-align: center;">{{i.headline}}</h3>
-                    <img src="{{i.image.url}}" width="583" height="280">
-                    
-                    
-                </div>
-            </a>
-                {% endfor%}
-                <div class="clear"></div>
-
-
+        <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="150">
+            <div class="col-xl-6 col-lg-8">
+                <h1>Open-Source-Games<span>.</span></h1>
+                <h2>Geriausias indie kūrėju portalas</h2>
             </div>
         </div>
-        <!--sutvarkyti kad tekstas butu arciau lauku , tipo po desine puse ju-->
-        <div class="middlecolumn">
-            <div class="card">
-                <div id="aboutmeheader">
-                    <h1>Populiarūs Žaidimai</h1>
-                </div>
-                
-                <div class="minicontentMiddle">
-                        
-                    <h3 style="text-align: center;">Content</h3>
-                    <h2>Vidinis content</h2>
-                    
-                    
-                </div>
-                <div class="minicontentMiddle">
-                        
-                    <h3 style="text-align: center;">Content</h3>
-                    <h2>Vidinis content</h2>
-                    
-                    
-                </div>
-                <div class="minicontentMiddle">
-                        
-                    <h3 style="text-align: center;">Content</h3>
-                    <h2>Vidinis content</h2>
-                    
-                    
-                </div>
-                <div class="clear"></div>
 
-
-
-
+        <div class="row gy-4 mt-5 justify-content-center" data-aos="zoom-in" data-aos-delay="250">
+            <div class="col-xl-2 col-md-4">
+                <div class="icon-box">
+                    <i class="ri-store-line"></i>
+                    <h3><a href="{% url 'news' %}">Naujienos</a></h3>
+                </div>
             </div>
-        </div>
-        <div class="rightcolumn2">
-
-            <div class="card">
-                <div id="aboutmeheader">
-                    <h1>Forumo diskusijos</h1>
+            <div class="col-xl-2 col-md-4">
+                <div class="icon-box">
+                    <i class="ri-bar-chart-box-line"></i>
+                    <h3><a href="{% url 'games' %}">Žaidimai</a></h3>
                 </div>
-                
-                <div class="minicontentMain">
-                        
-                    <h3 style="text-align: center;">Content</h3>
-                    <h2>Vidinis content</h2>
-                    
-                    
+            </div>
+            <div class="col-xl-2 col-md-4">
+                <div class="icon-box">
+                    <i class="ri-calendar-todo-line"></i>
+                    <h3><a href="">Forumas(nera)</a></h3>
                 </div>
-                <div class="minicontentMain">
-                        
-                    <h3 style="text-align: center;">Content</h3>
-                    <h2>Vidinis content</h2>
-                    
-                    
-                </div>
-                <div class="minicontentMain">
-                        
-                    <h3 style="text-align: center;">Content</h3>
-                    <h2>Vidinis content</h2>
-                    
-                    
-                </div>
-                <div class="clear"></div>
-
             </div>
         </div>
 
     </div>
-    <div id="footer">
-        <footer>
-            <address>2021 &copy;Dominykas Pleteras</address>
-        </footer>
-    </div>
-</div>
+</section>
 {% endblock %}

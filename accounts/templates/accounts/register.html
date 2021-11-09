@@ -1,93 +1,56 @@
 {% extends 'accounts/main.html' %}
+{% load crispy_forms_tags%}
 {% block content %}
-    <div id="wrapper">
 
-        <header>
-            <h2>Open-Source-Games</h2>
-        </header>
+{% include 'accounts/navbar.html' %}
 
-        {% include 'accounts/navbar.html' %}
-        <div class="row">
-            <div class="leftcolumn2">
-                <div class="card">
-                    <div class="fill">
-                        <img src="Images/reklama2.png" alt="Error loading">
-                    </div>
-
-
-                </div>
+<section class="vh-100 bg-image" style="background-image: url('https://mdbootstrap.com/img/Photos/new-templates/search-box/img4.jpg');">
+    <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+      <div class="container h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+            <div class="card" style="border-radius: 15px;">
+              <div class="card-body p-5">
+                <h2 class="text-uppercase text-center mb-5">Registracija</h2>
+  
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <div class="form-outline mb-4">
+                        {{form.username|as_crispy_field}}
+                        
+                      </div>
+                  <div class="form-outline mb-4">
+                    {{form.email|as_crispy_field}}
+    
+                  </div>
+  
+                  <div class="form-outline mb-4">
+                    {{form.password1|as_crispy_field}}
+                    
+                  </div>
+  
+                  <div class="form-outline mb-4">
+                    {{form.password2|as_crispy_field}}
+                    
+                  </div>
+  
+                  
+  
+                  <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Register</button>
+                  </div>
+  
+                  <p class="text-center text-muted mt-5 mb-0">Jau turite paskyra? <a href="{% url 'login' %}"" class="fw-bold text-body"><u>Prisijunkite čia</u></a></p>
+  
+                </form>
+  
+              </div>
             </div>
-            <!--sutvarkyti kad tekstas butu arciau lauku , tipo po desine puse ju-->
-            <div class="middlecolumn">
-                <div class="card">
-
-                    <form method="POST" action="">
-                        {% csrf_token %}
-                        <div class="row">
-                            <h2 style="text-align: center;">Registracija</h2>
-                            <div class="col-25">
-                                <label for="ilgis">Slapyvardis</label>
-                            </div>
-                            <div class="col-75">
-                                {{form.username}}
-                            </div>
-                        </div>
-                        <div class="row">
-                            
-                            <div class="col-25">
-                                <label for="ilgis">El.Paštas</label>
-                            </div>
-                            <div class="col-75">
-                                {{form.email}}
-                            </div>
-                        </div>
-                        <div class="row">
-                            
-                            <div class="col-25">
-                                <label for="ilgis">Slaptažodis</label>
-                            </div>
-                            <div class="col-75">
-                                {{form.password1}}
-                            </div>
-                        </div>
-                        <div class="row">
-                            
-                            <div class="col-25">
-                                <label for="ilgis">Pakartokite Slaptažodį</label>
-                            </div>
-                            <div class="col-75">
-                                {{form.password2}}
-                            </div>
-                        </div>
-                        {{form.errors}}
-                        <br>
-                        <div class="row">
-                            <input type="submit" value="Pateikti">
-                        </div>
-                    </form>
-
-
-
-
-
-                </div>
-            </div>
-            <div class="rightcolumn2">
-
-                <div class="card">
-                    <div class="fill">
-                        <img src="Images/reklama3.png" alt="Error loading">
-                    </div>
-
-                </div>
-            </div>
-
-            
+          </div>
         </div>
-        <div id="footer">
-            <footer>
-                <address>2021 &copy;Dominykas Pleteras</address>
-            </footer>
-        </div>
+      </div>
     </div>
+  </section>
+
+
 {% endblock %}

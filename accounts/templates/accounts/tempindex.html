@@ -1,0 +1,105 @@
+{% extends 'accounts/main.html' %}
+{% block content %}
+    <div id="wrapper">
+
+       
+    
+        {% include 'accounts/navbar.html' %}
+    <div class="row">
+        <div class="leftcolumn2">
+            <div class="card">
+                <div id="aboutmeheader">
+                    <h1>Naujienos</h1>
+                </div>
+                {% for i in news%}
+                <a href={% url 'newsPage' i.id %}>
+                <div class="minicontentMain">
+                        
+                    <h3 style="text-align: center;">{{i.headline}}</h3>
+                    <img src="{{i.image.url}}" width="583" height="280">
+                    
+                    
+                </div>
+            </a>
+                {% endfor%}
+                <div class="clear"></div>
+
+
+            </div>
+        </div>
+        <!--sutvarkyti kad tekstas butu arciau lauku , tipo po desine puse ju-->
+        <div class="middlecolumn">
+            <div class="card">
+                <div id="aboutmeheader">
+                    <h1>Populiarūs Žaidimai</h1>
+                </div>
+                
+                <div class="minicontentMiddle">
+                        
+                    <h3 style="text-align: center;">Content</h3>
+                    <h2>Vidinis content</h2>
+                    
+                    
+                </div>
+                <div class="minicontentMiddle">
+                        
+                    <h3 style="text-align: center;">Content</h3>
+                    <h2>Vidinis content</h2>
+                    
+                    
+                </div>
+                <div class="minicontentMiddle">
+                        
+                    <h3 style="text-align: center;">Content</h3>
+                    <h2>Vidinis content</h2>
+                    
+                    
+                </div>
+                <div class="clear"></div>
+
+
+
+
+            </div>
+        </div>
+        <div class="rightcolumn2">
+
+            <div class="card">
+                <div id="aboutmeheader">
+                    <h1>Forumo diskusijos</h1>
+                </div>
+                
+                <div class="minicontentMain">
+                        
+                    <h3 style="text-align: center;">Content</h3>
+                    <h2>Vidinis content</h2>
+                    
+                    
+                </div>
+                <div class="minicontentMain">
+                        
+                    <h3 style="text-align: center;">Content</h3>
+                    <h2>Vidinis content</h2>
+                    
+                    
+                </div>
+                <div class="minicontentMain">
+                        
+                    <h3 style="text-align: center;">Content</h3>
+                    <h2>Vidinis content</h2>
+                    
+                    
+                </div>
+                <div class="clear"></div>
+
+            </div>
+        </div>
+
+    </div>
+    <div id="footer">
+        <footer>
+            <address>2021 &copy;Dominykas Pleteras</address>
+        </footer>
+    </div>
+</div>
+{% endblock %}
