@@ -168,5 +168,9 @@ def covid(request):
 
     # return render(request, "accounts/weatherPage.html")
     
-
+def gamesapi(request):
+    response=requests.get('https://www.freetogame.com/api/games')
+    data= response.json()
+    
+    return render(request, "accounts/gamesAPI.html",{'response':data})
     

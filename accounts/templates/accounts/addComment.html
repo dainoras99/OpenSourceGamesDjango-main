@@ -1,38 +1,24 @@
 {% extends 'accounts/main.html' %}
+
 {% block content %}
-<div id="wrapper">
-    <header>
-        <h2>Open Source-Games</h2>
-    </header>
-    {% include 'accounts/navbar.html' %}
-    
-    <div class="comment-wrapper">
-        <div class="card">
-            <form method="POST">
-                {% csrf_token%}
-                
-                <h1>Naujas Komentaras</h1>
-                
-                <div class="row" >
-                    <div>
-                        {{form.body}}
-                    </div>
-                </div> 
-                
-                <div class="row">
-                    <input type="submit" value="Pateikti">
-                </div>
-                <div style="display: none;">
-                    {{form.userid}}
-                    {{form.newsid}}
-                </div>
-                <br>
-                
-            </form>
+{% load static %}
+{% include 'accounts/navbar.html' %}
+<div class="col-lg-4 col-md-5 col-sm-4 offset-md-1 offset-sm-1 col-12 mt-4">
+    <form id="algin-form">
+        {% csrf_token%}
+        <div class="form-group">
+            <h4>Naujas Komentaras</h4> 
+            
+            {{form.body}}
         </div>
-    </div>
-    <footer>
-        <address>2021 &copy;Dominykas Pleteras</address>
-    </footer>
+        <div class="row">
+            <input type="submit" value="Pateikti">
+        </div>
+        <div style="display: none;">
+            {{form.userid}}
+            {{form.newsid}}
+        </div>
+        
+    </form>
 </div>
 {%endblock%}
