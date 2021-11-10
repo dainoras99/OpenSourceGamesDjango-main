@@ -18,7 +18,7 @@
         <a style="color: black; text-decoration: none;" href="{% url 'uploadGame' %}">Ikelti žaidimą!</a>
     </button>
     {% endif %}
-    <div class="container">
+    <div class="container h-25"style="width: 40%;"">
         {% for i in userGame%}
         <a href={% url 'gamesPage' i.id %}>
             <div class="card mb-3">

@@ -169,15 +169,19 @@
 
     {% include 'accounts/navbar.html' %}
 
-    <div class="leftcolumn">
-        <div class="card">
+    <div class="container">
+        <div class="container-fluid text-center">
 
-            <h1>{{news.headline}}</h1>
-            <div class="photo-wrapper">
-                <img class="photo" src="{{news.image.url}}">
+            <div class="col-sm-8 text-left">
+                <h1>{{news.headline}}</h1>
+                <hr>
+                <h3>Autorius: {{news.author}}</h3>
+                <img src="{{news.image.url}}" class="img-fluid" alt="Responsive image">
+                <hr>
+                <p>{{news.text}}</p>
+
             </div>
-            <h2>Autorius:{{news.author}}</h2>
-            <p>{{news.text}}</p>
+
         </div>
     </div>
     <div class="container">
@@ -210,7 +214,8 @@
                         <span class="commenter-name">
                             {{request.user.username}}
                             <!-- <input type="text" placeholder="Add a public comment" name="commentInput"> -->
-                            <a class="btn btn-primary" href="{% url 'addComment' news.id %}" role="button">Komentuoti</a>
+                            <a class="btn btn-primary" href="{% url 'addComment' news.id %}"
+                                role="button">Komentuoti</a>
                         </span>
                         {% endif %}
 
@@ -250,6 +255,7 @@
             </div>
         </div>
     </div>
+
 
 
 

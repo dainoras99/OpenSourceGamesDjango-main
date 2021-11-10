@@ -49,8 +49,7 @@ def loginPage(request):
             return redirect('home')
         else:
             messages.info(request,'Slapyvardis arba slaptazodis neteisingas!')
-    context={}
-    return render(request,'accounts/login.html',context)
+    return render(request,'accounts/login.html')
 
 def logoutPage(request):
     logout(request)
