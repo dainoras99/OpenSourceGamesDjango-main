@@ -17,6 +17,7 @@ class UserGame(models.Model):
     gameCode=models.CharField(max_length=100000,null=True)
     image = models.ImageField(null=True, blank=True)
     gameOwnerUsername=models.CharField(max_length=200,null=True)
+    score = models.FloatField(null=True, blank=True, default=0)
     def __str__(self):
         return self.gameName
 
@@ -47,5 +48,12 @@ class GameComment(models.Model):
     def __str__(self):
         return '%s - %s' % (self.game_id.gameName, self.user_id.username) 
 
+class Vote(models.Model):
+    user_id=models.ForeignKey(User,related_name="usersLike",null=True,on_delete=models.CASCADE)
+    game_id=models.ForeignKey(UserGame,related_name="gamesLike",null=True,on_delete=models.CASCADE)
+    score = models.IntegerField(null=True, blank=True, default=0)
+
+    def __str__(self):
+        return '%s - %s - %s' % (self.game_id.gameName, self.user_id.username, self.score)
 
      

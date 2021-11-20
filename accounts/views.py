@@ -4,7 +4,7 @@ from django.db import connections
 from django.http.response import JsonResponse
 from django.shortcuts import redirect, render
 
-from accounts.models import Comment, Customer, GameComment, UserGame, NewsClass
+from accounts.models import Comment, Customer, GameComment, UserGame, NewsClass, Vote
 from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm
 from .forms import CreateNewNews, CreateUserForm, CreateNewGame, CreateNewComment
@@ -14,6 +14,11 @@ import urllib.request
 import json
 import requests
 from types import SimpleNamespace
+from django.db.models import F, Q
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+import operator
+
 
 # Create your views here.
 def home(request):
@@ -64,7 +69,8 @@ def games(request):
 def gamesPage(request,pk):
     gameComment = GameComment.objects.all()
     userGame= UserGame.objects.get(id=pk)
-    context={'userGame':userGame, 'comment': gameComment}
+    votes = Vote.objects.all()
+    context={'userGame':userGame, 'comment': gameComment, 'votes': votes}
     return render(request,'accounts/gamesPage.html',context)
 
 def uploadGame(request):
@@ -177,3 +183,88 @@ def gamesapi(request):
     
     return render(request, "accounts/gamesAPI.html",{'response':data})
     
+def scoreGame(request):
+     if request.POST.get('action') == 'vote':
+        id = int(request.POST.get('gameid'))
+        score = int(request.POST.get('score'))
+        update = UserGame.objects.get(id=id)
+        votesObjects = Vote.objects.filter(game_id=id).all()
+        votes = Vote.objects.filter(game_id=id).all().count()
+        totalScore=0
+        scoreTotal = 0
+        for VoteObject in votesObjects:
+            scoreTotal = scoreTotal + VoteObject.score
+        
+
+        if Vote.objects.filter(user_id=request.user.id, game_id=id).exists():
+                q = Vote.objects.get(
+                    Q(game_id=id) & Q(user_id=request.user.id))
+                evote = q.score
+                if evote == score:
+                    totalScore = (scoreTotal + score) / votes
+                    return JsonResponse({'totalScore':totalScore})
+                if evote == 1:
+                    scoreTotal - 1
+                    print(scoreTotal)
+                    update.score = (scoreTotal + score) / votes
+                    totalScore = (scoreTotal + score) / votes
+                    update.save()
+                    print((scoreTotal + score) / votes)
+                    q.delete()
+                    new = Vote(user_id=request.user, game_id=update, score=score)
+                    new.save()
+                    update.refresh_from_db()
+                    return JsonResponse({'totalScore':totalScore})
+                if evote == 2:
+                    scoreTotal - 2
+                    update.score = (scoreTotal + score) / votes
+                    totalScore = (scoreTotal + score) / votes
+                    update.save()
+                    print((scoreTotal + score) / votes)
+                    q.delete()
+                    new = Vote(user_id=request.user, game_id=update, score=score)
+                    new.save()
+                    update.refresh_from_db()
+                    return JsonResponse({'totalScore':totalScore})
+                if evote == 3:
+                    scoreTotal - 3
+                    update.score = (scoreTotal + score) / votes
+                    totalScore = (scoreTotal + score) / votes
+                    update.save()
+                    print((scoreTotal + score) / votes)
+                    q.delete()
+                    new = Vote(user_id=request.user, game_id=update, score=score)
+                    new.save()
+                    update.refresh_from_db()
+                    return JsonResponse({'totalScore':totalScore})
+                if evote == 4:
+                    scoreTotal - 4
+                    update.score = (scoreTotal + score) / votes
+                    totalScore = (scoreTotal + score) / votes
+                    update.save()
+                    print((scoreTotal + score) / votes)
+                    q.delete()
+                    new = Vote(user_id=request.user, game_id=update, score=score)
+                    new.save()
+                    update.refresh_from_db()
+                    return JsonResponse({'totalScore':totalScore})
+                if evote == 5:
+                    scoreTotal - 5
+                    update.score = (scoreTotal + score) / votes
+                    totalScore = (scoreTotal + score) / votes
+                    update.save()
+                    print((scoreTotal + score) / votes)
+                    q.delete()
+                    new = Vote(user_id=request.user, game_id=update, score=score)
+                    new.save()
+                    update.refresh_from_db()
+                    return JsonResponse({'totalScore':totalScore})
+
+        update.score = (scoreTotal + score) / (votes + 1)
+        update.save()
+        new = Vote(user_id=request.user, game_id=update, score=score)
+        new.save()
+
+        update.refresh_from_db()
+        up = update.score
+        return JsonResponse({'score':score, 'up':up})

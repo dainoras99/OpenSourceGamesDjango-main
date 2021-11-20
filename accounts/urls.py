@@ -20,6 +20,7 @@ urlpatterns = [
     path('weather/', views.weather, name='weather'),
     path('covid/', views.covid, name='covid'),
     path('gamesapi/', views.gamesapi, name='gamesapi'),
+    path('scoreGame/', views.scoreGame, name='scoreGame'),
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
