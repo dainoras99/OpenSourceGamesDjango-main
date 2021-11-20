@@ -201,26 +201,6 @@
                             </div>
                         </span> -->
                     </div>
-                    <div class="comment-box add-comment">
-                        {% if not news.comments.all %}
-                        {% if request.user.is_authenticated %}
-                        Jokiu komentaru nera <a href="{% url 'addComment' news.id %}">Prideti nauja</a>
-                        {% endif %}
-                        {% else %}
-                        {% if request.user.is_authenticated %}
-                        <span class="commenter-pic">
-                            <img src="{%static '/Images/user-icon.png' %}" class="img-fluid">
-                        </span>
-                        <span class="commenter-name">
-                            {{request.user.username}}
-                            <!-- <input type="text" placeholder="Add a public comment" name="commentInput"> -->
-                            <a class="btn btn-primary" href="{% url 'addComment' news.id %}"
-                                role="button">Komentuoti</a>
-                        </span>
-                        {% endif %}
-
-
-                    </div>
                     {% for comment in news.comments.all%}
                     <div class="comment-box">
                         <span class="commenter-pic">
@@ -251,19 +231,53 @@
                     </div>
                     {% endfor %}
                 </div>
+                <div class="comment-box add-comment">
+                    {% if request.user.is_authenticated %}
+                        <!-- <input type="text" placeholder="Add a public comment" name="commentInput"> -->
+                        <form id="algin-form" name="myForm" method="POST" action="">
+                            {% csrf_token%}
+                            <div class="form-group">
+                                <textarea placeholder="Pateikite komentarą..."id="message" name="message" rows="6" cols="148"></textarea>
+                            <br>
+                            </div>
+                            <div class="row">
+                                <input type="button" data-value="{{news.id}}" class="sendamessage" onClick="document.myForm.submit()" value="Pateikti komentarą" id="send_message" name="send_message">
+                            </div>
+                        </form>
+                </div>
                 {% endif %}
             </div>
         </div>
     </div>
-
-
-
-
-
 </div>
 </div>
 <footer>
     <address>2021 &copy;Dominykas Pleteras</address>
 </footer>
 </div>
+
+<script>
+    $(document).ready(function() {
+         $('.sendamessage').click(function (e) {
+           var newsid = $(this).attr("data-value")
+           var message = $('textarea#message').val();
+           e.preventDefault();
+           $.ajax({
+                 type: 'POST',
+                 url: '{% url "comment" %}',
+                 data: {
+                     message: message,
+                     csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken').val(),
+                     newsid: newsid,
+                     action: 'messagePost',
+                 },
+                 success: function (json) {
+   
+                 },
+                 error: function (xhr, errmsg, err) {}
+             });
+       });
+     });
+</script>
+
 {%endblock%}

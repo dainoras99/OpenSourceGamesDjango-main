@@ -1,6 +1,7 @@
 
 from django import http
 from django.db import connections
+from django.http.response import JsonResponse
 from django.shortcuts import redirect, render
 
 from accounts.models import Comment, Customer, GameComment, UserGame, NewsClass
@@ -103,25 +104,28 @@ def uploadNews(request):
     context={'form':form}
     return render(request,'accounts/uploadNews.html',context)
 
-def addComment(request, pk):
-    form=CreateNewComment()
-    news=NewsClass.objects.get(id=pk)
-    print(news.headline)
-    form = CreateNewComment(initial={'userid': request.user.id, 'newsid':news.id})
-    # def form_valid(self,form):
-    #         form.instance.newsid= self.kwargs['id']
-    #         form.instance.userid= self.kwargs[request.user.id]
-    #         return form.valid(form)
-    if request.method=='POST':
-        form=CreateNewComment(request.POST,)
-        print(request.POST)
+def comment(request):
+    # form=CreateNewComment()
+    # news=NewsClass.objects.get(id=pk)
+    # print(news.headline)
+    # form = CreateNewComment(initial={'userid': request.user.id, 'newsid':news.id})
+    # if request.method=='POST':
+    #     form=CreateNewComment(request.POST,)
+    #     print(request.POST)
         
-        if(form.is_valid()):
-            form.save()
-            return redirect('news')
+    #     if(form.is_valid()):
+    #         form.save()
+    #         return redirect('news')
     
-    context={'form':form}
-    return render(request,'accounts/addComment.html',context)
+    # context={'form':form}
+    # return render(request,'accounts/addComment.html',context)
+    if request.POST.get('action') == 'messagePost':
+        id = int(request.POST.get('newsid'))
+        message = request.POST.get('message')
+        newsObject = NewsClass.objects.get(id=id)
+        new = Comment(userid=request.user, newsid=newsObject, body=message)
+        new.save();
+        return JsonResponse({'newsid': id, 'message': message, 'userid': request.user.id})
 
     
 def weather(request):
