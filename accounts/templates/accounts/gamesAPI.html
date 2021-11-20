@@ -20,9 +20,11 @@
     <div class="container">
         <h2>Filtravimas</h2>
         <p>Įveskite pvz: žaidimo pavadinimas, žanras, leidimo metai:</p>
-        <input class="form-control" id="myInput" type="text" placeholder="Search..">
+        <form id="search-books">
+            <input class="form-control" id="myInput" type="text" placeholder="Search..">
+        </form>
         <div id="myDIV">
-            <!-- cia ideti ka ieskos -->
+            <<!-- cia ideti ka ieskos -->>
         </div>
     </div>
     <div class="album py-5 bg-light">
@@ -35,14 +37,12 @@
                         <div class="card shadow-sm">
                             <img class="card-img-top" src="{{i.thumbnail}}" alt="Card image cap">
                             <div class="card-body">
-                                <p class="card-text">{{i.title}}</p>
+                                <p class="card-text cardTitle">{{i.title}}</p>
                                 <p class="card-text">{{i.short_description}}</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <small class="text-muted">Žanras: {{i.genre}} </small>
                                     <small class="text-muted">Platforma: {{i.platform}} </small>
                                     <small class="text-muted">Žaidimas išleistas: {{i.release_date}} </small>
-
-
                                 </div>
                             </div>
                         </div>
@@ -51,8 +51,22 @@
                 {%endfor%}
             </div </div>
         </div>
-
 </main>
-
+<script>
+    const games = document.querySelectorAll(".cardTitle");
+    const searchBar = document.forms['search-books'].querySelector('input');
+    searchBar.addEventListener('keyup', function(e){
+    const term = e.target.value.toLowerCase();
+    Array.from(games).forEach(function(game) {
+        const title=game.textContent;
+        if(title.toLowerCase().indexOf(term) != -1) {
+            game.parentElement.parentElement.style.display = 'block';
+        }
+        else {
+            game.parentElement.parentElement.style.display = 'none';
+        }
+    })
+})
+</script>
 
 {% endblock %}
