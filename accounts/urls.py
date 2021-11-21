@@ -21,6 +21,7 @@ urlpatterns = [
     path('covid/', views.covid, name='covid'),
     path('gamesapi/', views.gamesapi, name='gamesapi'),
     path('scoreGame/', views.scoreGame, name='scoreGame'),
+    path('postCommentGame/', views.commentGame, name="commentGame"),
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

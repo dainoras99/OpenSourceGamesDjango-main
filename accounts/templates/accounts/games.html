@@ -26,7 +26,14 @@
                 <div class="card-body">
                     <h5 class="card-title">{{i.gameName}}</h5>
                     <p class="card-text">{{i.gameDescription}}</p>
-                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    <p class="card-text">
+                    <small class="text-muted">Last updated 3 mins ago</small>
+                    {% if i.score == 0.0 %}
+                    <small class="text-muted" style="float: right;">Įvertinimų nėra</small>
+                    {% else %}          
+                    <small class="text-muted" style="float: right;">Bendras įvertinimas - {{i.score}}</small>
+                    {%endif%}
+                </p>
                 </div>
             </div>
         </a>

@@ -312,7 +312,11 @@
                     {%endif%}
                     {%endfor%}
                     <div class="mt-4">
+                    {% if userGame.score == 0 %}
+                        <h4 id="countVotes">Įvertinimų nėra</h4>
+                    {% else %}
                         <h4 id="countVotes">Bendras įvertinimas - {{userGame.score}}</h4>
+                    {% endif %}
                     </div>
                 </form>
                 <hr>
@@ -395,6 +399,21 @@
                 </div>
                 {% endfor %}
             </div>
+            <div class="comment-box add-comment">
+                {% if request.user.is_authenticated %}
+                    <!-- <input type="text" placeholder="Add a public comment" name="commentInput"> -->
+                    <form id="algin-form" name="myForm" method="POST" action="">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <textarea placeholder="Pateikite komentarą..."id="message" name="message" rows="6" cols="148"></textarea>
+                        <br>
+                        </div>
+                        <div class="row">
+                            <input type="button" data-value="{{userGame.id}}" class="sendamessage" onClick="document.myForm.submit()" value="Pateikti komentarą" id="send_message" name="send_message">
+                        </div>
+                    </form>
+            </div>
+            {% endif %}
             {% endif %}
         </div>
     </div>
@@ -417,12 +436,36 @@
                   score: score,
               },
               success: function (json) {
-                document.getElementById("countVotes").innerHTML = "Bendras įvertinimas - " + json["totalScore"];
+                  location.reload();
+                  return false;
+               // document.getElementById("countVotes").innerHTML = "Bendras įvertinimas - " + json["totalScore"];
                  
               },
               error: function (xhr, errmsg, err) {}
           });
       });
   });
+
+  $(document).ready(function() {
+         $('.sendamessage').click(function (e) {
+           var gameid = $(this).attr("data-value")
+           var message = $('textarea#message').val();
+           e.preventDefault();
+           $.ajax({
+                 type: 'POST',
+                 url: '{% url "commentGame" %}',
+                 data: {
+                     message: message,
+                     csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken').val(),
+                     gameid: gameid,
+                     action: 'messagePost',
+                 },
+                 success: function (json) {
+   
+                 },
+                 error: function (xhr, errmsg, err) {}
+             });
+       });
+     });
 </script>
 {%endblock%}

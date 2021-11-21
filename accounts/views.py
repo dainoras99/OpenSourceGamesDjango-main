@@ -110,6 +110,16 @@ def uploadNews(request):
     context={'form':form}
     return render(request,'accounts/uploadNews.html',context)
 
+def commentGame(request):
+     if request.POST.get('action') == 'messagePost':
+        id = int(request.POST.get('gameid'))
+        message = request.POST.get('message')
+        gameObject = UserGame.objects.get(id=id)
+        new = GameComment(user_id=request.user, game_id=gameObject, comment_body=message)
+        new.save();
+        return JsonResponse({'gameid': id, 'message': message, 'userid': request.user.id})
+
+
 def comment(request):
     # form=CreateNewComment()
     # news=NewsClass.objects.get(id=pk)
@@ -204,9 +214,8 @@ def scoreGame(request):
                     totalScore = (scoreTotal + score) / votes
                     return JsonResponse({'totalScore':totalScore})
                 if evote == 1:
-                    scoreTotal - 1
                     print(scoreTotal)
-                    update.score = (scoreTotal + score) / votes
+                    update.score = ((scoreTotal - 1) + score) / votes
                     totalScore = (scoreTotal + score) / votes
                     update.save()
                     print((scoreTotal + score) / votes)
@@ -216,8 +225,7 @@ def scoreGame(request):
                     update.refresh_from_db()
                     return JsonResponse({'totalScore':totalScore})
                 if evote == 2:
-                    scoreTotal - 2
-                    update.score = (scoreTotal + score) / votes
+                    update.score = ((scoreTotal - 2) + score) / votes
                     totalScore = (scoreTotal + score) / votes
                     update.save()
                     print((scoreTotal + score) / votes)
@@ -227,8 +235,7 @@ def scoreGame(request):
                     update.refresh_from_db()
                     return JsonResponse({'totalScore':totalScore})
                 if evote == 3:
-                    scoreTotal - 3
-                    update.score = (scoreTotal + score) / votes
+                    update.score = ((scoreTotal - 3) + score) / votes
                     totalScore = (scoreTotal + score) / votes
                     update.save()
                     print((scoreTotal + score) / votes)
@@ -238,8 +245,7 @@ def scoreGame(request):
                     update.refresh_from_db()
                     return JsonResponse({'totalScore':totalScore})
                 if evote == 4:
-                    scoreTotal - 4
-                    update.score = (scoreTotal + score) / votes
+                    update.score = ((scoreTotal - 4) + score) / votes
                     totalScore = (scoreTotal + score) / votes
                     update.save()
                     print((scoreTotal + score) / votes)
@@ -249,8 +255,7 @@ def scoreGame(request):
                     update.refresh_from_db()
                     return JsonResponse({'totalScore':totalScore})
                 if evote == 5:
-                    scoreTotal - 5
-                    update.score = (scoreTotal + score) / votes
+                    update.score = ((scoreTotal - 5) + score) / votes
                     totalScore = (scoreTotal + score) / votes
                     update.save()
                     print((scoreTotal + score) / votes)
