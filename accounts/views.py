@@ -142,15 +142,17 @@ def commentGame(request):
 
 def commentTopic(request):
      if request.POST.get('action') == 'messagePost':
+        print("veikia")
         id = int(request.POST.get('topicid'))
         message = request.POST.get('message')
         topicObject = Topic.objects.get(id=id)
         new = TopicComment(user_id=request.user, topic_id=topicObject, comment_body=message)
         new.save();
+        print("veikia")
         topicObject.replies = F('replies') + 1
         topicObject.save()
         topicObject.refresh_from_db()
-
+        print("veikia")
         return JsonResponse({'topic': id, 'message': message, 'userid': request.user.id})
 
 def comment(request):
