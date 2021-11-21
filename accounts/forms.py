@@ -3,7 +3,7 @@ from django.forms import ModelForm, fields, widgets
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from .models import  Comment, NewsClass, UserGame
+from .models import  Comment, NewsClass, Topic, UserGame
 
 class CreateUserForm(UserCreationForm):
     class Meta:
@@ -45,6 +45,19 @@ class CreateNewNews(ModelForm):
         }
         widgets={
             'text' : forms.Textarea(attrs={'class':'form-control', 'rows':'3'}),
+        }
+
+class CreateNewTopic(ModelForm):
+    class Meta:
+        model=Topic
+        fields=['topicName','user_id','topicDescription']
+        labels = {
+            'topicName': 'Antraštė',
+            'user_id': 'Autorius',
+            'topicDescription': 'Diskusija',
+        }
+        widgets={
+            'topicDescription' : forms.Textarea(attrs={'class':'form-control', 'rows':'3'}),
         }
 
 class CreateNewComment(ModelForm):

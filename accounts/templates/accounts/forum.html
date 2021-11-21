@@ -1,0 +1,41 @@
+{% extends 'accounts/main.html' %}
+{% block content %}
+{% include 'accounts/navbar.html' %}
+{% if request.user.is_authenticated %}
+<div class="text-center">
+<button type="button" class="btn btn-secondary" value="Įkelti diskusija">
+    <a style="color: black; text-decoration: none;" href="{% url 'uploadTopic' %}">Įkelti diskusiją!</a>
+</button>
+</div>
+{% endif %}
+<div class="container mt-1">
+<div class="row border border-primary" style="background-color: rgb(214, 212, 212);">
+    <div class="col-6">
+        <p>Diskusijos pavadinimas</p>
+    </div>
+    <div class="col-3">
+        <p>Atsakymų skaičius</p>
+    </div>
+    <div class="col-3">
+        <p>Autorius</p>
+    </div>
+</div>
+</div>
+{% for i in topics%}
+<div class="container">
+    <a class="forumPost" href="{% url 'topicPage' i.id %}" style="text-decoration: none; color: inherit;">
+    <div class="row border border-primary border-top-0" style="background-color: rgb(245, 245, 245);" >
+        <div class="col-6">
+            <p>{{i.topicName}}</p>
+        </div>
+        <div class="col-3">
+            <p>{{i.replies}}</p>
+        </div>
+        <div class="col-3">
+            <p>{{i.user_id}}</p>
+        </div>
+    </div>
+    </a>
+</div>
+{%endfor%}
+{% endblock %}

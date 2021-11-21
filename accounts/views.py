@@ -1,18 +1,24 @@
 
 from django import http
 from django.db import connections
+from django.http.response import JsonResponse
 from django.shortcuts import redirect, render
 
-from accounts.models import Comment, Customer, GameComment, UserGame, NewsClass
+from accounts.models import Comment, Customer, GameComment, Topic, TopicComment, UserGame, NewsClass, Vote
 from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm
-from .forms import CreateNewNews, CreateUserForm, CreateNewGame, CreateNewComment
+from .forms import CreateNewNews, CreateNewTopic, CreateUserForm, CreateNewGame, CreateNewComment
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 import urllib.request
 import json
 import requests
 from types import SimpleNamespace
+from django.db.models import F, Q
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+import operator
+
 
 # Create your views here.
 def home(request):
@@ -20,9 +26,12 @@ def home(request):
     return render(request,'accounts/index.html',{'news':news})
 
 def news(request):
-
     news= NewsClass.objects.all()
     return render(request,'accounts/news.html',{'news':news})
+
+def topics(request):
+    topics=Topic.objects.all()
+    return render(request,'accounts/forum.html',{'topics':topics})
 
 def register(request):
     form= CreateUserForm()
@@ -63,8 +72,15 @@ def games(request):
 def gamesPage(request,pk):
     gameComment = GameComment.objects.all()
     userGame= UserGame.objects.get(id=pk)
-    context={'userGame':userGame, 'comment': gameComment}
+    votes = Vote.objects.all()
+    context={'userGame':userGame, 'comment': gameComment, 'votes': votes}
     return render(request,'accounts/gamesPage.html',context)
+
+def topicPage(request,pk):
+    topicComment = TopicComment.objects.all()
+    topicPage= Topic.objects.get(id=pk)
+    context={'topicPage':topicPage, 'comment': topicComment}
+    return render(request,'accounts/forumPage.html',context)
 
 def uploadGame(request):
     form=CreateNewGame()
@@ -103,25 +119,62 @@ def uploadNews(request):
     context={'form':form}
     return render(request,'accounts/uploadNews.html',context)
 
-def addComment(request, pk):
-    form=CreateNewComment()
-    news=NewsClass.objects.get(id=pk)
-    print(news.headline)
-    form = CreateNewComment(initial={'userid': request.user.id, 'newsid':news.id})
-    # def form_valid(self,form):
-    #         form.instance.newsid= self.kwargs['id']
-    #         form.instance.userid= self.kwargs[request.user.id]
-    #         return form.valid(form)
+def uploadTopic(request):
+    form=CreateNewTopic()
+    form = CreateNewTopic(initial={'user_id': request.user.username})
     if request.method=='POST':
-        form=CreateNewComment(request.POST,)
+        form=CreateNewTopic(request.POST, request.FILES)
         print(request.POST)
-        
-        if(form.is_valid()):
+        if form.is_valid():
             form.save()
-            return redirect('news')
-    
+            return redirect('topics')
     context={'form':form}
-    return render(request,'accounts/addComment.html',context)
+    return render(request,'accounts/uploadTopic.html',context)
+
+def commentGame(request):
+     if request.POST.get('action') == 'messagePost':
+        id = int(request.POST.get('gameid'))
+        message = request.POST.get('message')
+        gameObject = UserGame.objects.get(id=id)
+        new = GameComment(user_id=request.user, game_id=gameObject, comment_body=message)
+        new.save();
+        return JsonResponse({'gameid': id, 'message': message, 'userid': request.user.id})
+
+def commentTopic(request):
+     if request.POST.get('action') == 'messagePost':
+        id = int(request.POST.get('topicid'))
+        message = request.POST.get('message')
+        topicObject = Topic.objects.get(id=id)
+        new = TopicComment(user_id=request.user, topic_id=topicObject, comment_body=message)
+        new.save();
+        topicObject.replies = F('replies') + 1
+        topicObject.save()
+        topicObject.refresh_from_db()
+
+        return JsonResponse({'topic': id, 'message': message, 'userid': request.user.id})
+
+def comment(request):
+    # form=CreateNewComment()
+    # news=NewsClass.objects.get(id=pk)
+    # print(news.headline)
+    # form = CreateNewComment(initial={'userid': request.user.id, 'newsid':news.id})
+    # if request.method=='POST':
+    #     form=CreateNewComment(request.POST,)
+    #     print(request.POST)
+        
+    #     if(form.is_valid()):
+    #         form.save()
+    #         return redirect('news')
+    
+    # context={'form':form}
+    # return render(request,'accounts/addComment.html',context)
+    if request.POST.get('action') == 'messagePost':
+        id = int(request.POST.get('newsid'))
+        message = request.POST.get('message')
+        newsObject = NewsClass.objects.get(id=id)
+        new = Comment(userid=request.user, newsid=newsObject, body=message)
+        new.save();
+        return JsonResponse({'newsid': id, 'message': message, 'userid': request.user.id})
 
     
 def weather(request):
@@ -173,3 +226,83 @@ def gamesapi(request):
     
     return render(request, "accounts/gamesAPI.html",{'response':data})
     
+def scoreGame(request):
+     if request.POST.get('action') == 'vote':
+        id = int(request.POST.get('gameid'))
+        score = int(request.POST.get('score'))
+        update = UserGame.objects.get(id=id)
+        votesObjects = Vote.objects.filter(game_id=id).all()
+        votes = Vote.objects.filter(game_id=id).all().count()
+        totalScore=0
+        scoreTotal = 0
+        for VoteObject in votesObjects:
+            scoreTotal = scoreTotal + VoteObject.score
+        
+
+        if Vote.objects.filter(user_id=request.user.id, game_id=id).exists():
+                q = Vote.objects.get(
+                    Q(game_id=id) & Q(user_id=request.user.id))
+                evote = q.score
+                if evote == score:
+                    totalScore = (scoreTotal + score) / votes
+                    return JsonResponse({'totalScore':totalScore})
+                if evote == 1:
+                    print(scoreTotal)
+                    update.score = ((scoreTotal - 1) + score) / votes
+                    totalScore = (scoreTotal + score) / votes
+                    update.save()
+                    print((scoreTotal + score) / votes)
+                    q.delete()
+                    new = Vote(user_id=request.user, game_id=update, score=score)
+                    new.save()
+                    update.refresh_from_db()
+                    return JsonResponse({'totalScore':totalScore})
+                if evote == 2:
+                    update.score = ((scoreTotal - 2) + score) / votes
+                    totalScore = (scoreTotal + score) / votes
+                    update.save()
+                    print((scoreTotal + score) / votes)
+                    q.delete()
+                    new = Vote(user_id=request.user, game_id=update, score=score)
+                    new.save()
+                    update.refresh_from_db()
+                    return JsonResponse({'totalScore':totalScore})
+                if evote == 3:
+                    update.score = ((scoreTotal - 3) + score) / votes
+                    totalScore = (scoreTotal + score) / votes
+                    update.save()
+                    print((scoreTotal + score) / votes)
+                    q.delete()
+                    new = Vote(user_id=request.user, game_id=update, score=score)
+                    new.save()
+                    update.refresh_from_db()
+                    return JsonResponse({'totalScore':totalScore})
+                if evote == 4:
+                    update.score = ((scoreTotal - 4) + score) / votes
+                    totalScore = (scoreTotal + score) / votes
+                    update.save()
+                    print((scoreTotal + score) / votes)
+                    q.delete()
+                    new = Vote(user_id=request.user, game_id=update, score=score)
+                    new.save()
+                    update.refresh_from_db()
+                    return JsonResponse({'totalScore':totalScore})
+                if evote == 5:
+                    update.score = ((scoreTotal - 5) + score) / votes
+                    totalScore = (scoreTotal + score) / votes
+                    update.save()
+                    print((scoreTotal + score) / votes)
+                    q.delete()
+                    new = Vote(user_id=request.user, game_id=update, score=score)
+                    new.save()
+                    update.refresh_from_db()
+                    return JsonResponse({'totalScore':totalScore})
+
+        update.score = (scoreTotal + score) / (votes + 1)
+        update.save()
+        new = Vote(user_id=request.user, game_id=update, score=score)
+        new.save()
+
+        update.refresh_from_db()
+        up = update.score
+        return JsonResponse({'score':score, 'up':up})

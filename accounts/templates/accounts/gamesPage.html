@@ -1,6 +1,7 @@
 {% extends 'accounts/main.html' %}
 {% block content %}
 {% load static %}
+{% load define_action %}
 
 <head>
     <title>Bootstrap 4 Blog Post Comments Section Design</title>
@@ -8,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/fontawesome.min.css" integrity="sha384-jLKHWM3JRmfMU0A5x5AkjWkw/EYfGUAGagvnfryNV3F9VqM98XiIH7VBGVoxVSc7" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -141,6 +143,45 @@
             margin-top: 15px;
         }
 
+        /* Stars rating */
+        .starRating {
+            display: flex;
+            position: relative;
+            transform: translate(-50%, -50%) rotateY(180deg);
+        }
+        .starRating input {
+            display: none;
+        }
+        .starRating label {
+            display: block;
+            cursor: pointer;
+            width: 50px;
+        }
+        .starRating label::before {
+            content: '\f005';
+            font-family: fontAwesome;
+            position: absolute;
+        }
+        .starRating label::after {
+            content: '\f005';
+            position: absolute;
+            font-family: fontAwesome;
+            display: block;
+            color: green;
+            top: 0;
+            opacity: 0;
+            transition: .5s;
+            text-shadow: 0 2px 5px rgba(0,0,0,.5);
+        }
+        .starRating label:hover::after,
+        .starRating label:hover ~ label::after,
+        .starRating input:checked ~ label::after  {
+            opacity: 1;
+        }
+        .newStarRating {
+            color: green;
+        }
+
         /*======Responsive CSS=======*/
         @media (max-width: 767px) {
             .comments .commenter-name {
@@ -161,6 +202,9 @@
                 display: block;
                 margin-left: 0px;
             }
+            .forumPost:hover {
+                background-color: grey;
+            }
         }
     </style>
 </head>
@@ -171,9 +215,113 @@
     </div>
     <div class="container">
         <div class="container-fluid text-center">
-
+            
             <div class="col-sm-8 text-left">
                 <h1>{{userGame.gameName}}</h1>
+                <form name="ratingForm" method="POST" action="">
+                    {% csrf_token %}
+                    {% define_action True as continue %}
+                    {% for vote in votes %}
+                    {% if vote.user_id.id == request.user.id and vote.game_id.id == userGame.id %}
+                    {% if vote.score == 1 %}
+                    <div class="starRating">
+                        <input type="radio" class="rateGame" name="star" value="5" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star1">
+                        <label for="star1" id="star1Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="4" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star2">
+                        <label for="star2" id="star2Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="3" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star3">
+                        <label for="star3" id="star3Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="2" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star4">
+                        <label for="star4" id="star4Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="1" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star5">
+                        <label for="star5" class="newStarRating" id="star5Label"></label>
+                    </div>
+                    {% define_action False as continue %}
+                    {%endif%}
+                    {% if vote.score == 2 %}
+                    <div class="starRating">
+                        <input type="radio" class="rateGame" name="star" value="5" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star1">
+                        <label for="star1" id="star1Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="4" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star2">
+                        <label for="star2" id="star2Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="3" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star3">
+                        <label for="star3" id="star3Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="2" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star4">
+                        <label for="star4" class="newStarRating" id="star4Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="1" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star5">
+                        <label for="star5" class="newStarRating" id="star5Label"></label>
+                    </div>
+                    {% define_action False as continue %}
+                    {%endif%}
+                    {% if vote.score == 3 %}
+                    <div class="starRating">
+                        <input type="radio" class="rateGame" name="star" value="5" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star1">
+                        <label for="star1" id="star1Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="4" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star2">
+                        <label for="star2" id="star2Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="3" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star3">
+                        <label for="star3" class="newStarRating" id="star3Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="2" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star4">
+                        <label for="star4" class="newStarRating" id="star4Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="1" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star5">
+                        <label for="star5" class="newStarRating" id="star5Label"></label>
+                    </div>
+                    {% define_action False as continue %}
+                    {%endif%}
+                    {% if vote.score == 4 %}
+                    <div class="starRating">
+                        <input type="radio" class="rateGame" name="star" value="5" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star1">
+                        <label for="star1" id="star1Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="4" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star2">
+                        <label for="star2" class="newStarRating" id="star2Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="3" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star3">
+                        <label for="star3" class="newStarRating" id="star3Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="2" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star4">
+                        <label for="star4" class="newStarRating" id="star4Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="1" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star5">
+                        <label for="star5" class="newStarRating" id="star5Label"></label>
+                    </div>
+                    {% define_action False as continue %}
+                    {%endif%}
+                    {% if vote.score == 5 %}
+                    <div class="starRating">
+                        <input type="radio" class="rateGame" name="star" value="5" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star1">
+                        <label for="star1" class="newStarRating" id="star1Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="4" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star2">
+                        <label for="star2" class="newStarRating" id="star2Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="3" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star3">
+                        <label for="star3" class="newStarRating" id="star3Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="2" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star4">
+                        <label for="star4" class="newStarRating" id="star4Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="1" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star5">
+                        <label for="star5" class="newStarRating" id="star5Label"></label>
+                    </div>
+                    {% define_action False as continue %}
+                    {%endif%}
+                    {%endif%}
+                    {% if forloop.counter == votes.count and continue == True %}
+                    <div class="starRating">
+                        <input type="radio" class="rateGame" name="star" value="5" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star1">
+                        <label for="star1" id="star1Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="4" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star2">
+                        <label for="star2" id="star2Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="3" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star3">
+                        <label for="star3" id="star3Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="2" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star4">
+                        <label for="star4" id="star4Label"></label>
+                        <input type="radio" class="rateGame" name="star" value="1" data-value="{{userGame.id}}" onClick="document.ratingForm.submit()" id="star5">
+                        <label for="star5" id="star5Label"></label>
+                    </div>
+                    {%endif%}
+                    {%endfor%}
+                    <div class="mt-4">
+                    {% if userGame.score == 0 %}
+                        <h4 id="countVotes">Įvertinimų nėra</h4>
+                    {% else %}
+                        <h4 id="countVotes">Bendras įvertinimas - {{userGame.score}}</h4>
+                    {% endif %}
+                    </div>
+                </form>
                 <hr>
                 <h3>Žaidimo autorius: {{userGame.gameOwnerUsername}}</h3>
                 <img src="{{userGame.image.url}}" class="img-fluid" alt="Responsive image">
@@ -243,7 +391,7 @@
                     </div>
                     <div class="comment-box add-comment reply-box">
                         <span class="commenter-pic">
-                            <img src="/images/user-icon.jpg" class="img-fluid">
+                            <!-- <img src="/images/user-icon.jpg" class="img-fluid"> -->
                         </span>
                         <span class="commenter-name">
                             <input type="text" placeholder="Add a public reply" name="Add Comment">
@@ -254,9 +402,73 @@
                 </div>
                 {% endfor %}
             </div>
+            <div class="comment-box add-comment">
+                {% if request.user.is_authenticated %}
+                    <!-- <input type="text" placeholder="Add a public comment" name="commentInput"> -->
+                    <form id="algin-form" name="myForm" method="POST" action="">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <textarea placeholder="Pateikite komentarą..."id="message" name="message" rows="6" cols="148"></textarea>
+                        <br>
+                        </div>
+                        <div class="row">
+                            <input type="button" data-value="{{userGame.id}}" class="sendamessage" onClick="document.myForm.submit()" value="Pateikti komentarą" id="send_message" name="send_message">
+                        </div>
+                    </form>
+            </div>
+            {% endif %}
             {% endif %}
         </div>
     </div>
 </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+      $('.rateGame').click(function (e) {
+         var gameid = $(this).attr("data-value")
+         var score = $(this).attr("value");
+          e.preventDefault();
+          $.ajax({
+              type: 'POST',
+              url: '{% url "scoreGame" %}',
+              data: {
+                  gameid: gameid,
+                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken').val(),
+                  action: 'vote',
+                  score: score,
+              },
+              success: function (json) {
+                  location.reload();
+                  return false;
+               // document.getElementById("countVotes").innerHTML = "Bendras įvertinimas - " + json["totalScore"];
+                 
+              },
+              error: function (xhr, errmsg, err) {}
+          });
+      });
+  });
+
+  $(document).ready(function() {
+         $('.sendamessage').click(function (e) {
+           var gameid = $(this).attr("data-value")
+           var message = $('textarea#message').val();
+           e.preventDefault();
+           $.ajax({
+                 type: 'POST',
+                 url: '{% url "commentGame" %}',
+                 data: {
+                     message: message,
+                     csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken').val(),
+                     gameid: gameid,
+                     action: 'messagePost',
+                 },
+                 success: function (json) {
+   
+                 },
+                 error: function (xhr, errmsg, err) {}
+             });
+       });
+     });
+</script>
 {%endblock%}
