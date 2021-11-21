@@ -4,10 +4,10 @@ from django.db import connections
 from django.http.response import JsonResponse
 from django.shortcuts import redirect, render
 
-from accounts.models import Comment, Customer, GameComment, UserGame, NewsClass, Vote
+from accounts.models import Comment, Customer, GameComment, Topic, TopicComment, UserGame, NewsClass, Vote
 from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm
-from .forms import CreateNewNews, CreateUserForm, CreateNewGame, CreateNewComment
+from .forms import CreateNewNews, CreateNewTopic, CreateUserForm, CreateNewGame, CreateNewComment
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 import urllib.request
@@ -26,9 +26,12 @@ def home(request):
     return render(request,'accounts/index.html',{'news':news})
 
 def news(request):
-
     news= NewsClass.objects.all()
     return render(request,'accounts/news.html',{'news':news})
+
+def topics(request):
+    topics=Topic.objects.all()
+    return render(request,'accounts/forum.html',{'topics':topics})
 
 def register(request):
     form= CreateUserForm()
@@ -73,6 +76,12 @@ def gamesPage(request,pk):
     context={'userGame':userGame, 'comment': gameComment, 'votes': votes}
     return render(request,'accounts/gamesPage.html',context)
 
+def topicPage(request,pk):
+    topicComment = TopicComment.objects.all()
+    topicPage= Topic.objects.get(id=pk)
+    context={'topicPage':topicPage, 'comment': topicComment}
+    return render(request,'accounts/forumPage.html',context)
+
 def uploadGame(request):
     form=CreateNewGame()
     uloggedinuser=request.user.username
@@ -110,6 +119,18 @@ def uploadNews(request):
     context={'form':form}
     return render(request,'accounts/uploadNews.html',context)
 
+def uploadTopic(request):
+    form=CreateNewTopic()
+    form = CreateNewTopic(initial={'user_id': request.user.username})
+    if request.method=='POST':
+        form=CreateNewTopic(request.POST, request.FILES)
+        print(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('topics')
+    context={'form':form}
+    return render(request,'accounts/uploadTopic.html',context)
+
 def commentGame(request):
      if request.POST.get('action') == 'messagePost':
         id = int(request.POST.get('gameid'))
@@ -119,6 +140,18 @@ def commentGame(request):
         new.save();
         return JsonResponse({'gameid': id, 'message': message, 'userid': request.user.id})
 
+def commentTopic(request):
+     if request.POST.get('action') == 'messagePost':
+        id = int(request.POST.get('topicid'))
+        message = request.POST.get('message')
+        topicObject = Topic.objects.get(id=id)
+        new = TopicComment(user_id=request.user, topic_id=topicObject, comment_body=message)
+        new.save();
+        topicObject.replies = F('replies') + 1
+        topicObject.save()
+        topicObject.refresh_from_db()
+
+        return JsonResponse({'topic': id, 'message': message, 'userid': request.user.id})
 
 def comment(request):
     # form=CreateNewComment()

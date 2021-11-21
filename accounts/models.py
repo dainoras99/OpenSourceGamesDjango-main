@@ -59,8 +59,16 @@ class Vote(models.Model):
 class Topic(models.Model):
     topicName=models.CharField(max_length=200,null=True)
     topicDescription=models.CharField(max_length=100000,null=True)
-    user_id=models.ForeignKey(User,related_name="useLike",null=True,on_delete=models.CASCADE)
+    user_id=models.CharField(max_length=200,null=True)
     replies=models.IntegerField(null=True, blank=True, default=0)
     date_added = models.DateTimeField(auto_now_add=True)
     def __str__(self):
-        return '%s - %s' % (self.user_id.username, self.topicName)
+        return '%s' % (self.topicName)
+
+class TopicComment(models.Model):
+    user_id=models.ForeignKey(User,related_name="userrr",null=True,on_delete=models.CASCADE)
+    topic_id= models.ForeignKey(Topic,related_name="topiccc", null=True, on_delete=models.CASCADE)
+    comment_body = models.TextField(null=True)
+    date_added = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return '%s - %s' % (self.topic_id.topicName, self.user_id.username) 

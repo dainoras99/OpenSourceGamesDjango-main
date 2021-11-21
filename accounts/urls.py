@@ -22,6 +22,10 @@ urlpatterns = [
     path('gamesapi/', views.gamesapi, name='gamesapi'),
     path('scoreGame/', views.scoreGame, name='scoreGame'),
     path('postCommentGame/', views.commentGame, name="commentGame"),
+    path('forum/', views.topics, name='topics'),
+    path('topicPage/<str:pk>/', views.topicPage, name='topicPage'),
+    path('postCommentTopic/', views.commentTopic, name="commentTopic"),
+    path('uploadTopic/', views.uploadTopic, name='uploadTopic'),
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
