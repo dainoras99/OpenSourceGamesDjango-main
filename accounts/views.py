@@ -88,13 +88,10 @@ def uploadGame(request):
     form = CreateNewGame(initial={'gameOwnerUsername': uloggedinuser})
     if request.method=='POST':
         form=CreateNewGame(request.POST, request.FILES)
-        print(request.POST)
-        
         if form.is_valid():
             form.save()
             return redirect('games')
     context={'form':form}
-
     return render(request,'accounts/uploadGame.html',context)
 
 
@@ -108,11 +105,9 @@ def newsPage(request,pk):
 
 def uploadNews(request):
     form=CreateNewNews()
- 
     if request.method=='POST':
         form=CreateNewNews(request.POST, request.FILES)
         print(request.POST)
-        
         if form.is_valid():
             form.save()
             return redirect('news')
@@ -137,39 +132,22 @@ def commentGame(request):
         message = request.POST.get('message')
         gameObject = UserGame.objects.get(id=id)
         new = GameComment(user_id=request.user, game_id=gameObject, comment_body=message)
-        new.save();
+        new.save()
         return JsonResponse({'gameid': id, 'message': message, 'userid': request.user.id})
 
 def commentTopic(request):
      if request.POST.get('action') == 'messagePost':
-        print("veikia")
         id = int(request.POST.get('topicid'))
         message = request.POST.get('message')
         topicObject = Topic.objects.get(id=id)
         new = TopicComment(user_id=request.user, topic_id=topicObject, comment_body=message)
-        new.save();
-        print("veikia")
+        new.save()
         topicObject.replies = F('replies') + 1
         topicObject.save()
         topicObject.refresh_from_db()
-        print("veikia")
         return JsonResponse({'topic': id, 'message': message, 'userid': request.user.id})
 
 def comment(request):
-    # form=CreateNewComment()
-    # news=NewsClass.objects.get(id=pk)
-    # print(news.headline)
-    # form = CreateNewComment(initial={'userid': request.user.id, 'newsid':news.id})
-    # if request.method=='POST':
-    #     form=CreateNewComment(request.POST,)
-    #     print(request.POST)
-        
-    #     if(form.is_valid()):
-    #         form.save()
-    #         return redirect('news')
-    
-    # context={'form':form}
-    # return render(request,'accounts/addComment.html',context)
     if request.POST.get('action') == 'messagePost':
         id = int(request.POST.get('newsid'))
         message = request.POST.get('message')
@@ -235,7 +213,7 @@ def scoreGame(request):
         update = UserGame.objects.get(id=id)
         votesObjects = Vote.objects.filter(game_id=id).all()
         votes = Vote.objects.filter(game_id=id).all().count()
-        totalScore=0
+        totalScore = 0
         scoreTotal = 0
         for VoteObject in votesObjects:
             scoreTotal = scoreTotal + VoteObject.score
